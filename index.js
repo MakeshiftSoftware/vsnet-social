@@ -1,7 +1,7 @@
 const net = require('net');
 
 /**
- * Denotes all expected message types.
+ * Denotes all potential message types.
  */
 const MessageType = {
   CONNECT: 1,
