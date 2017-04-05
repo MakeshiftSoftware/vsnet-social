@@ -57,7 +57,7 @@ const createServer = () => {
   const vsServer = {};
 
   vsServer.on = on;
-  vsServer.server = net.createServer(onClientConnected);;
+  vsServer.server = net.createServer(onClientConnected);
 
   vsServer.start = (port) => {
     vsServer.server.listen(port, () => {
@@ -103,7 +103,7 @@ const sendMessage = (socket, msg) => {
 }
 
 /**
- * Map player id to corresponding player object. 
+ * Map player id to corresponding player object.
  *
  * @param {String} playerId - The player id
  * @param {Object} player - The player object
@@ -124,7 +124,7 @@ const registerSocket = (playerId, socket) => {
 }
 
 /**
- * Get socket object belonging to player id. 
+ * Get socket object belonging to player id.
  *
  * @param {String} playerId - The player id
  */
@@ -134,7 +134,7 @@ const getSocket = (playerId) => {
 
 /**
  * Remove player and corresponding
- * socket from server by player id. 
+ * socket from server by player id.
  *
  * @param {String} playerId - The player id
  */
