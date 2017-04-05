@@ -113,7 +113,7 @@ const registerPlayer = (playerId, player) => {
 }
 
 /**
- * Map player id to corresponding socket object. 
+ * Map player id to corresponding socket object.
  *
  * @param {String} playerId - The player id
  * @param {Object} socket - The socket object
