@@ -1,39 +1,7 @@
-const net = require('net');
-
-/**
- * Denotes all potential message types.
- */
-const MessageType = {
-  CONNECT: 1,
-  CONNECTED: 2,
-  NOTIFY_ONLINE: 3,
-  CHAT: 4,
-  QUEUE: 5,
-  RETRY: 6,
-  MATCH: 7,
-  INVITE: 8,
-  NO_MATCH: 9,
-  JOIN: 10,
-  LOAD_LEVEL: 11,
-  LEVEL_LOADED: 12,
-  START_GAME: 13,
-  PLAYER_INPUT: 14
-}
-
-/**
- * Expected keys for incoming and outgoing messages.
- */
-const MessageProps = {
-  TYPE: 'c',
-  PLAYER:'p',
-  FRIENDS: 'f',
-  RECIPIENT: 'r',
-  MESSAGE: 'm',
-  RANK: 's',
-  RECIPIENTS: 't',
-  USERNAME: 'u',
-  GAME: 'g'
-}
+const net          = require('net');
+const Message      = require('./message').Message;
+const MessageType  = require('./message').MessageType;
+const MessageProps = require('./message').MessageProps;
 
 /**
  * Data structures for storing sockets and players
@@ -64,6 +32,9 @@ const createServer = () => {
       console.log('Listening on', port);
     });
   }
+
+  vsServer.registerPlayer = registerPlayer;
+  vsServer.registerSocket = registerSocket;
 
   return vsServer;
 }
@@ -96,7 +67,7 @@ const on = (event, callback) => {
  * Send message through socket.
  *
  * @param {Object} socket - The socket object
- * @param {Object} msg - The parsed message object
+ * @param {Object} msg - The message
  */
 const sendMessage = (socket, msg) => {
   socket.write(JSON.stringify(msg) + '\0');
@@ -133,8 +104,8 @@ const getSocket = (playerId) => {
 }
 
 /**
- * Remove player and corresponding
- * socket from server by player id.
+ * Remove player and corresponding socket from 
+ * server by player id.
  *
  * @param {String} playerId - The player id
  */
@@ -167,7 +138,7 @@ const onMessage = (socket) => {
   socket.bufferLen = 0;
 
   try {
-    const msg = JSON.parse(s);
+    const msg = new Message(s);
 
     if (msg && typeof msg === 'object') {
       processMessage(socket, msg);
@@ -181,11 +152,10 @@ const onMessage = (socket) => {
  * Process received message by message type.
  *
  * @param {Object} socket - The socket object
- * @param {Object} msg - The parsed message object
+ * @param {Object} msg - The message
  */
 const processMessage = (socket, msg) => {
-  const type = msg[MessageProps.TYPE];
-  const callback = eventHandler[type];
+  const callback = eventHandler[msg.getType()];
 
   if (callback) {
     callback(socket, msg);
@@ -241,6 +211,11 @@ const attachErrorHandler = (socket) => {
  * Expose create server function.
  */
 exports.createServer = createServer;
+
+/**
+ * Expose message class.
+ */
+exports.Message = Message;
 
 /**
  * Expose message types and message properties.
