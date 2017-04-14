@@ -37,6 +37,12 @@ const MessageProps = {
  * Message class used to parse incoming messages and extract message properties.
  */
 class Message {
+    /**
+     * If message string is provided, initialize message with parsed json.
+     * Otherwise, initialize message with empty object.
+     *
+     * @param {String} data - The message string
+     */
     constructor(data) {
         if (data) {
             this.msg = JSON.parse(data);
@@ -45,22 +51,44 @@ class Message {
         }
     }
 
+    /**
+     * Return message type.
+     */
     getType() {
         return this.msg[MessageProps.TYPE];
     }
 
+    /**
+     * Set message type.
+     *
+     * @param {String} type - The message type
+     */
     setType(type) {
         this.msg[MessageProps.TYPE] = type;
     }
 
+    /**
+     * Return json string of message.
+     */
     getData() {
         return JSON.strinfigy(this.msg);
     }
 
+    /**
+     * Get message property.
+     *
+     * @param {String} prop - The message property to retrieve.
+     */
     getProperty(prop) {
         return this.msg[prop];
     }
 
+    /**
+     * Set message property.
+     *
+     * @param {String} prop - The property to set
+     * @param {String} value  - The value string
+     */
     setProperty(prop, value) {
         this.msg[prop] = value;
     }
