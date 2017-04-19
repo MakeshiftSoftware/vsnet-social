@@ -4,6 +4,11 @@ const MessageType  = require('./message').MessageType;
 const MessageProps = require('./message').MessageProps;
 
 /**
+ * Socket server instance.
+ */
+let vsServer;
+
+/**
  * Data structures for storing sockets and players
  */
 const players = {};
@@ -22,21 +27,27 @@ const eventHandler = {};
  * and attach start function.
  */
 const createServer = () => {
-  const vsServer = {};
+  vsServer = {};
 
   vsServer.on = on;
   vsServer.server = net.createServer(onClientConnected);
 
-  vsServer.start = (port) => {
-    vsServer.server.listen(port, () => {
-      console.log('Listening on', port);
-    });
-  }
-
+  vsServer.start = startServer;
   vsServer.registerPlayer = registerPlayer;
   vsServer.registerSocket = registerSocket;
 
   return vsServer;
+}
+
+/**
+ * Start the server.
+ *
+ * @param {Number} port - The port to listen on
+ */
+const startServer = (port) => {
+  vsServer.server.listen(port, () => {
+    console.log('Listening on', port);
+  });
 }
 
 /**
@@ -70,7 +81,7 @@ const on = (event, callback) => {
  * @param {Object} msg - The message
  */
 const sendMessage = (socket, msg) => {
-  socket.write(JSON.stringify(msg) + '\0');
+  socket.write(msg.getData() + '\0');
 }
 
 /**
@@ -196,7 +207,7 @@ const attachEndHandler = (socket) => {
 }
 
 /**
- * Socket error handler.
+ * Handler for socket errors.
  * TODO: handle this
  *
  * @param {Object} socket - The socket object

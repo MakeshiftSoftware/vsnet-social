@@ -15,7 +15,8 @@ const MessageType = {
   LOAD_LEVEL: 11,
   LEVEL_LOADED: 12,
   START_GAME: 13,
-  PLAYER_INPUT: 14
+  PLAYER_INPUT: 14,
+  MESSAGE: 15
 }
 
 /**
@@ -24,7 +25,6 @@ const MessageType = {
 const MessageProps = {
   TYPE: 'c',
   PLAYER:'p',
-  FRIENDS: 'f',
   RECIPIENT: 'r',
   MESSAGE: 'm',
   RANK: 's',
