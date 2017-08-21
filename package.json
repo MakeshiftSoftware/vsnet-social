@@ -1,8 +1,31 @@
 {
   "name": "vsnet-socket",
-  "version": "0.0.1",
-  "main": "index.js",
+  "version": "1.0.0",
   "scripts": {
+    "example": "pm2 start ecosystem.config.js --no-daemon",
+    "restart": "pm2 restart all",
+    "stop": "pm2 stop all",
+    "delete": "pm2 delete all",
+    "list": "pm2 list",
+    "clean": "rm -rf node_modules && npm cache verify && npm i",
+    "setup": "npm i -g pm2@latest",
+    "db_dev": "cockroach start --insecure --store=/makeshift-data --host=localhost",
+    "lint": "./node_modules/.bin/eslint src/**",
+    "nsp": "nsp check --output summary",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.3",
+    "query-string": "^5.0.0",
+    "uws": "^8.14.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "nodemon": "^1.11.0"
   }
 }
