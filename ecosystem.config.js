@@ -6,6 +6,7 @@ module.exports = {
       exec_mode: 'cluster',
       instances: 0,
       wait_ready: true,
+      listen_timeout: 10000,
       watch: true,
       env: {
         PORT: 8000,
