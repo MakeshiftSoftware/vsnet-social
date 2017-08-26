@@ -5,9 +5,7 @@ const WebSocket = require('uws')
 const PubSubClient = require('../vsnet-redis').PubSubClient
 
 /**
- * A basic socket server implementation with support for
- * custom events and backed by redis pub/sub to handle
- * message delivery in a distributed system.
+ * A socket server backed by redis pub/sub
  */
 class VsServer {
   constructor(opts) {
@@ -46,6 +44,10 @@ class VsServer {
       throw new Error('Must specify a port')
     }
 
+    if (!opts.secret) {
+      throw new Error('No secret provided')
+    }
+
     this.wssOpts.port = opts.port
     this.secret = opts.secret
     this.wssOpts.verifyClient = this.verifyClient.bind(this)
@@ -54,18 +56,12 @@ class VsServer {
       this.pingInterval = opts.pingInterval
     }
 
-    if (opts.pubsub) {
-      if (opts.pubsub.url) {
-        this.pubsub = new PubSubClient(opts.pubsub.url)
-      } else {
-        this.pubsub = new PubSubClient({
-          host: opts.pubsub.host,
-          port: opts.pubsub.port
-        })
-      }
-
+    if (opts.pubsub && opts.pubsub.url && typeof opts.pubsub.url === 'string') {
+      this.pubsub = new PubSubClient(opts.pubsub.url)
       this.pubsub.subscribe('global')
       this.pubsub.on('message', this.pubsubOnMessage.bind(this))
+    } else {
+      throw new Error('Missing or invalid pubsub options')
     }
   }
 
