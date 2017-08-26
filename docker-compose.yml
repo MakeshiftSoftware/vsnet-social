@@ -1,0 +1,26 @@
+version: "3"
+services:
+  vsnet-social:
+    restart: always
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+  vs-social-redis-pubsub:
+    restart: always
+    build:
+      context: ../docker/vsnet-social/
+      dockerfile: Dockerfile-vs-social-redis-pubsub
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6379/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
