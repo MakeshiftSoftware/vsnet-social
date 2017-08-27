@@ -11,6 +11,7 @@ class PubSubClient {
     }
 
     console.log('Connecting to redis:', url)
+
     this.sub = new Redis(url)
     this.pub = new Redis(url)
   }

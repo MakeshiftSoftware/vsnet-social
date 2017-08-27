@@ -1,4 +1,4 @@
-const VsServer = require('./lib/vsnet-socket')
+const VsServer = require('./server')
 
 if (!process.env.PORT) {
   throw new Error('No port specified')

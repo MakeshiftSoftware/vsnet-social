@@ -2,7 +2,7 @@ const url = require('url')
 const qs = require('query-string')
 const jwt = require('jsonwebtoken')
 const WebSocket = require('uws')
-const PubSubClient = require('../vsnet-redis').PubSubClient
+const PubSubClient = require('./pubsub')
 
 /**
  * A socket server backed by redis pub/sub
