@@ -1,6 +1,7 @@
 version: "3"
 services:
   vsnet-social:
+    container_name: "vsnet-social"
     restart: always
     env_file: .env
     build:
@@ -10,11 +11,12 @@ services:
       - "3000"
     ports:
       - "3000:3000"
+    depends_on:
+      - vs-social-redis-pubsub
   vs-social-redis-pubsub:
+    container_name: "vs-social-redis-pubsub"
+    image: redis
     restart: always
-    build:
-      context: ../docker/vsnet-social/
-      dockerfile: Dockerfile-vs-social-redis-pubsub
     expose:
       - "6379"
     ports:
