@@ -2,15 +2,9 @@ const Redis = require('ioredis')
 
 class PubSubClient {
   constructor(url) {
-    if (!url) {
-      throw new Error('No connection url specified')
+    if (!url || typeof url !== 'string') {
+      throw new Error('Missing or invalid connection url')
     }
-
-    if (typeof url !== 'string') {
-      throw new Error('Invalid type: redis url must be of type string')
-    }
-
-    console.log('Connecting to redis:', url)
 
     this.sub = new Redis(url)
     this.pub = new Redis(url)
@@ -26,6 +20,14 @@ class PubSubClient {
 
   on(event, cb) {
     this.sub.on(event, cb)
+  }
+
+  unsubscribe() {
+    return this.sub.unsubscribe()
+  }
+
+  close() {
+    return Promise.all([this.sub.close(), this.pub.close()])
   }
 }
 
