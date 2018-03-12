@@ -47,7 +47,7 @@ module.exports = (server) => {
     // todo
   }
 
-  server.on('connected', onClientConnected);
-  server.on('disconnected', onClientDisconnected);
-  server.on('message', onMessageReceived);
+  server.onConnect(onClientConnected);
+  server.onDisconnect(onClientDisconnected);
+  server.on(Protocol.MESSAGE, onMessageReceived);
 };
