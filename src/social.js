@@ -1,25 +1,20 @@
-module.exports = (server) => {
-  const sendMessage = (m) => {
-    const mRecipient = m.r
-    const mData = m.d
+const Events = {
+  CLIENT_CONNECTED: 'connected',
+  MESSAGE_RECEIVED: 'm'
+};
 
-    if (mRecipient && mData) {
-      server.relayMessage({
-        r: mRecipient,
-        d: mData
-      })
-    }
+const Messages = {
+  CONNECTION_ESTABLISHED: {
+    t: 'cs'
   }
+};
 
-  // Attach message handlers
-  server.on('m', sendMessage)
+module.exports = (server) => {
+  server.on(Events.CLIENT_CONNECTED, (m, socket) => {
+    server.sendMessage(Messages.CONNECTION_ESTABLISHED, socket);
+  });
 
-  server.on('connected', (socket) => {
-    server.sendMessage({ t: 'cs' }, socket)
-  })
-
-  server.on('disconnected', (socket) => {
-    // TODO: cleanup after disconnect
-  })
-}
-
+  server.on(Events.MESSAGE_RECEIVED, (m, socket) => {
+    server.publishMessage(m);
+  });
+};

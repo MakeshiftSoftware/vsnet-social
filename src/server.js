@@ -1,32 +1,20 @@
-const VsSocket = require('./socket')
+const VsSocket = require('./socket');
 
-const storeUrl = process.env.NODE_ENV === 'production'
-  ? process.env.REDIS_URL_PROD
-  : process.env.REDIS_URL_DEV
+const server = new VsSocket();
 
-const pubsubUrl = process.env.NODE_ENV === 'production'
-  ? process.env.PUBSUB_URL_PROD
-  : process.env.PUBSUB_URL_DEV
+// Attach event handlers
+require('./handlers')(server);
 
-// Define server options
-const serverOpts = {
-  port: process.env.PORT,
-  secret: process.env.SECRET,
-  pingInterval: 30000,
-  store: storeUrl,
-  pubsub: pubsubUrl
-}
-
-const server = new VsSocket(serverOpts)
-
-// Start server
 server.start(() => {
-  /* eslint-disable */
   process.on('SIGINT', () => {
-    server.stop(() => {
-      process.exit(0)
-    })
-  })
+    server.stop((err) => {
+      process.exit(err ? 1 : 0);  // eslint-disable-line
+    });
+  });
 
-  console.log('Listening on', process.env.PORT)
-})
+  if (process.send) {
+    process.send('ready');
+  }
+
+  console.log('vsnet-social: listening on', process.env.PORT); // eslint-disable-line
+});
