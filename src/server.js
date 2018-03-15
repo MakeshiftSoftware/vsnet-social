@@ -1,9 +1,7 @@
-const VsSocket = require('./socket');
+const SocialManager = require('./core/SocialManager');
 
-const server = new VsSocket();
-
-// Attach event handlers
-require('./handlers')(server);
+// Initialize social manager
+const server = new SocialManager();
 
 server.start(() => {
   process.on('SIGINT', () => {
