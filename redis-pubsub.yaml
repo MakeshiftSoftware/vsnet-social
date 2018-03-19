@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: social-redis-pubsub
+  labels:
+    service: social-redis-pubsub
+spec:
+  ports:
+  - port: 6379
+  selector:
+    role: social-redis-pubsub
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: social-redis-pubsub
+spec:
+  serviceName: "social-redis-pubsub"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: social-redis-pubsub
+    spec:
+      nodeSelector:
+        role: apps
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: social-redis-pubsub
+        image: redis:3
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

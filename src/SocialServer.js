@@ -22,7 +22,7 @@ class SocialManager {
     const {
       port,
       secret,
-      pubsubUrl
+      pubsub
     } = options;
 
     if (!secret) {
@@ -32,7 +32,7 @@ class SocialManager {
     this.server = new VsSocket({
       port,
       secret,
-      pubsubUrl,
+      pubsub,
       channels: [
         Channel.CHAT,
         Channel.NOTIFICATION
