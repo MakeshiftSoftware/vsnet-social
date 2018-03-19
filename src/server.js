@@ -1,3 +1,4 @@
+/* eslint-disable no-process-exit, no-console */
 const os = require('os');
 const cluster = require('cluster');
 const SocialServer = require('./SocialServer');
@@ -9,7 +10,7 @@ if (cluster.isMaster) {
 
   cluster.on('exit', (worker) => {
     if (!worker.exitedAfterDisconnect) {
-      console.log('[Error][social] Worker has died', worker.process.pid); // eslint-disable-line no-console
+      console.log('[Error][social] Worker has died', worker.process.pid);
       cluster.fork();
     }
   });
@@ -22,7 +23,6 @@ if (cluster.isMaster) {
   });
 
   server.start(() => {
-    /* eslint-disable no-process-exit, no-console */
     process.on('SIGINT', () => {
       server.stop((err) => {
         process.exit(err ? 1 : 0);
