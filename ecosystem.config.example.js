@@ -9,14 +9,14 @@ module.exports = {
       env: {
         NODE_ENV: 'development',
         PORT: 8000,
-        REDIS_PUBSUB_URL: 'redis://vsnet-social-pubsub:6379',
-        APP_SECRET: 'SECURE_JWT_SECRET'
+        APP_SECRET: 'SECURE_JWT_SECRET',
+        REDIS_PUBSUB_URL: 'redis://vsnet-social-pubsub:6379'
       },
       env_production: {
         NODE_ENV: 'production',
         PORT: 8000,
-        REDIS_PUBSUB_URL: 'redis://vsnet-social-pubsub:6379',
-        APP_SECRET: 'SECURE_JWT_SECRET'
+        APP_SECRET: 'SECURE_JWT_SECRET',
+        REDIS_PUBSUB_URL: 'redis://vsnet-social-pubsub:6379'
       }
     }
   ]

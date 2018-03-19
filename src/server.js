@@ -1,7 +1,11 @@
-const SocialManager = require('./core/SocialManager');
+const SocialServer = require('./SocialServer');
 
-// Initialize social manager
-const server = new SocialManager();
+// Initialize social server
+const server = new SocialServer({
+  port: process.env.PORT,
+  secret: process.env.APP_SECRET,
+  pubsubUrl: process.env.REDIS_PUBSUB_URL
+});
 
 server.start(() => {
   process.on('SIGINT', () => {

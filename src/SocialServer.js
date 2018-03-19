@@ -1,5 +1,5 @@
-/* eslint-disable prefer-arrow-callback */
-const VsSocket = require('../socket');
+/* eslint-disable prefer-arrow-callback, no-console */
+const VsSocket = require('./socket');
 
 const Protocol = {
   CONNECTED: 0,
@@ -13,8 +13,26 @@ const Channel = {
 };
 
 class SocialManager {
-  constructor() {
+  /**
+   * Initialize social server.
+   *
+   * @param {Object} options - Server options
+   */
+  constructor(options) {
+    const {
+      port,
+      secret,
+      pubsubUrl
+    } = options;
+
+    if (!secret) {
+      console.log('[Warn][matchmaker] No secret provided, connecting clients will not be verified');
+    }
+
     this.server = new VsSocket({
+      port,
+      secret,
+      pubsubUrl,
       channels: [
         Channel.CHAT,
         Channel.NOTIFICATION
