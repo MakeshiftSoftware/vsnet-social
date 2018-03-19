@@ -26,7 +26,7 @@ class SocialManager {
     } = options;
 
     if (!secret) {
-      console.log('[Warn][matchmaker] No secret provided, connecting clients will not be verified');
+      console.log('[Warn][social] No secret provided, connecting clients will not be verified');
     }
 
     this.server = new VsSocket({
