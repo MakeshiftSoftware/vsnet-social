@@ -19,7 +19,10 @@ if (cluster.isMaster) {
   const server = new SocialServer({
     port: process.env.PORT,
     secret: process.env.APP_SECRET,
-    pubsub: process.env.REDIS_PUBSUB_SERVICE
+    pubsub: {
+      url: process.env.REDIS_PUBSUB_SERVICE,
+      password: process.env.REDIS_PUBSUB_PASSWORD
+    }
   });
 
   server.start(() => {
@@ -42,4 +45,3 @@ if (cluster.isMaster) {
     console.log('vsnet-social: listening on', process.env.PORT);
   });
 }
-

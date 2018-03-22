@@ -32,11 +32,13 @@ class SocialServer {
     this.server = new VsSocket({
       port,
       secret,
-      pubsub,
-      channels: [
-        Channel.CHAT,
-        Channel.NOTIFICATION
-      ]
+      pubsub: {
+        ...pubsub,
+        channels: [
+          Channel.CHAT,
+          Channel.NOTIFICATION
+        ]
+      }
     });
 
     this.server.onConnect(this.onClientConnected);
