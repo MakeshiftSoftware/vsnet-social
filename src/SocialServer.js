@@ -12,7 +12,7 @@ const Channel = {
   NOTIFICATION: 'notification'
 };
 
-class SocialManager {
+class SocialServer {
   /**
    * Initialize social server.
    *
@@ -122,4 +122,4 @@ class SocialManager {
   }
 }
 
-module.exports = SocialManager;
+module.exports = SocialServer;
