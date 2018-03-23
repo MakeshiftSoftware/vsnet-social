@@ -151,7 +151,7 @@ class VsSocket {
   }
 
   /**
-   * Stop server.
+   * Stop server
    * Close redis connections
    */
   stop() {
@@ -176,7 +176,7 @@ class VsSocket {
   }
 
   /**
-   * Authenticate connection request using jwt.
+   * Authenticate connection request using jwt
    *
    * @param {String} secret - Server secret
    */
@@ -204,7 +204,7 @@ class VsSocket {
   }
 
   /**
-   * Client connected handler.
+   * Client connected handler
    *
    * @param {Object} socket - Socket object
    */
@@ -240,7 +240,7 @@ class VsSocket {
   }
 
   /**
-   * Client disconnected handler.
+   * Client disconnected handler
    *
    * @param {Object} socket - Socket object
    */
@@ -267,7 +267,7 @@ class VsSocket {
   }
 
   /**
-   * Ping sockets to check if they are alive.
+   * Ping sockets to check if they are alive
    * TODO: cleanup disconnected sockets
    */
   ping() {
@@ -309,7 +309,7 @@ class VsSocket {
   }
 
   /**
-   * Parse incoming socket message.
+   * Parse incoming socket message
    *
    * @param {String} message - Socket message
    */
@@ -337,7 +337,7 @@ class VsSocket {
   }
 
   /**
-   * Send message to user.
+   * Send message to user
    *
    * @param {(String|Object)} message - The message string or object
    * @param {Object} socket - The socket object
@@ -351,7 +351,7 @@ class VsSocket {
   }
 
   /**
-   * Send message to a single user by user id.
+   * Send message to a single user by user id
    *
    * @param {Object} data - Message data
    * @param {String} id - User id
@@ -367,7 +367,7 @@ class VsSocket {
   }
 
   /**
-   * Send message to multiple users using an array of user ids.
+   * Send message to multiple users using an array of user ids
    *
    * @param {Object} data - Message data
    * @param {Array} ids - Array of user ids
