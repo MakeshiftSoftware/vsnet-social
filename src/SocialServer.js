@@ -1,5 +1,6 @@
 /* eslint-disable prefer-arrow-callback, no-console */
 const VsSocket = require('./socket');
+const log = require('./logger');
 
 const Protocol = {
   CONNECTED: 0,
@@ -19,7 +20,7 @@ class SocialServer {
    * @param {Object} options - Server options
    */
   constructor(options) {
-    console.log('[Info][social] Initializing server');
+    log.info('[social] Initializing server');
 
     const {
       port,
@@ -28,7 +29,7 @@ class SocialServer {
     } = options;
 
     if (!secret) {
-      console.log('[Warn][social] No secret provided, connecting clients will not be verified');
+      log.warn('[social] No secret provided, connecting clients will not be verified');
     }
 
     this.server = new VsSocket({
@@ -57,7 +58,7 @@ class SocialServer {
    * @param {Object} socket - Socket connection of originating request
    */
   onMessageReceived(m, socket) {
-    console.log('[Info][social] Received chat message from client:', m.data);
+    log.info('[social] Received chat message from client: ' + m.data);
 
     this.server.publishMessage(m, Channel.CHAT);
   }
@@ -69,7 +70,7 @@ class SocialServer {
    * @param {Object} socket - Socket connection of originating request
    */
   onPlayerOnline(m, socket) {
-    console.log('[Info][social] Sending player online notification');
+    log.info('[social] Sending player online notification');
 
     this.server.publishMessage(m, Channel.NOTIFICATION);
   }
@@ -81,7 +82,7 @@ class SocialServer {
    * @param {Object} socket - New socket connection
    */
   onClientConnected(socket) {
-    console.log('[Info][social] Client connected');
+    log.info('[social] Client connected: ' + socket.id);
 
     const message = {
       data: {
@@ -99,7 +100,7 @@ class SocialServer {
    * @param {Object} socket - Disconnected socket
    */
   onClientDisconnected(socket) {
-    console.log('[Info][social] Client disconnected');
+    log.info('[social] Client disconnected: ' + socket.id);
   }
 
   /**
@@ -108,7 +109,7 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   start(cb) {
-    console.log('[Info][social] Starting server');
+    log.info('[social] Starting server');
 
     this.server.start();
 
@@ -123,18 +124,18 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   async stop(cb) {
-    console.log('[Info][social] Stopping server');
+    log.info('[social] Stopping server');
 
     try {
       await this.server.stop();
 
-      console.log('[Info][social] Server stopped successfully');
+      log.info('[social] Server stopped successfully');
 
       if (cb) {
         cb();
       }
     } catch (err) {
-      console.log('[Info][social] Error stopping server:', err.message);
+      log.error('[social] Error stopping server: ' + err.message);
 
       cb(err);
     }

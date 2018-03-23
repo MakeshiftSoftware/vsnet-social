@@ -1,7 +1,8 @@
-/* eslint-disable no-process-exit, no-console */
+/* eslint-disable no-process-exit */
 const os = require('os');
 const cluster = require('cluster');
 const SocialServer = require('./SocialServer');
+const log = require('./logger');
 
 if (cluster.isMaster) {
   for (let i = 0; i < os.cpus().length; ++i) {
@@ -10,7 +11,7 @@ if (cluster.isMaster) {
 
   cluster.on('exit', (worker) => {
     if (!worker.exitedAfterDisconnect) {
-      console.log('[Error][social] Worker has died', worker.process.pid);
+      log.error('[social] Worker has died', worker.process.pid);
 
       cluster.fork();
     }
