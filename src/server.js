@@ -11,37 +11,40 @@ if (cluster.isMaster) {
   cluster.on('exit', (worker) => {
     if (!worker.exitedAfterDisconnect) {
       console.log('[Error][social] Worker has died', worker.process.pid);
+
       cluster.fork();
     }
   });
 } else {
+  const port = process.env.PORT;
+  const secret = process.env.APP_SECRET;
+  const pubsub = {
+    url: process.env.REDIS_PUBSUB_SERVICE,
+    password: process.env.REDIS_PUBSUB_PASSWORD
+  };
+
   // Initialize social server
   const server = new SocialServer({
-    port: process.env.PORT,
-    secret: process.env.APP_SECRET,
-    pubsub: {
-      url: process.env.REDIS_PUBSUB_SERVICE,
-      password: process.env.REDIS_PUBSUB_PASSWORD
-    }
+    port,
+    secret,
+    pubsub
   });
 
   server.start(() => {
     process.on('SIGINT', () => {
-      server.stop((err) => {
-        process.exit(err ? 1 : 0);
-      });
+      server.stop(stop);
     });
 
     process.on('SIGTERM', () => {
-      server.stop((err) => {
-        process.exit(err ? 1 : 0);
-      });
+      server.stop(stop);
     });
 
-    if (process.send) {
-      process.send('ready');
-    }
-
-    console.log('vsnet-social: listening on', process.env.PORT);
+    console.log('[Info][social] Server started on port', server.port);
   });
+}
+
+function stop(err) {
+  console.log('[Info][social] Server stopped');
+
+  process.exit(err ? 1 : 0);
 }

@@ -19,6 +19,8 @@ class SocialServer {
    * @param {Object} options - Server options
    */
   constructor(options) {
+    console.log('[Info][social] Initializing server');
+
     const {
       port,
       secret,
@@ -41,6 +43,7 @@ class SocialServer {
       }
     });
 
+    // attach handlers
     this.server.onConnect(this.onClientConnected);
     this.server.onDisconnect(this.onClientDisconnected);
     this.server.on(Protocol.MESSAGE, this.onMessageReceived);
@@ -54,6 +57,8 @@ class SocialServer {
    * @param {Object} socket - Socket connection of originating request
    */
   onMessageReceived(m, socket) {
+    console.log('[Info][social] Received chat message from client:', m.data);
+
     this.server.publishMessage(m, Channel.CHAT);
   }
 
@@ -64,6 +69,8 @@ class SocialServer {
    * @param {Object} socket - Socket connection of originating request
    */
   onPlayerOnline(m, socket) {
+    console.log('[Info][social] Sending online notification');
+
     this.server.publishMessage(m, Channel.NOTIFICATION);
   }
 
@@ -74,6 +81,8 @@ class SocialServer {
    * @param {Object} socket - New socket connection
    */
   onClientConnected(socket) {
+    console.log('[Info][social] Client connected');
+
     const message = {
       data: {
         type: Protocol.CONNECTED
@@ -89,8 +98,8 @@ class SocialServer {
    *
    * @param {Object} socket - Disconnected socket
    */
-  onClientDisconnected(socket) {  // eslint-disable-line
-    // todo
+  onClientDisconnected(socket) {
+    console.log('[Info][social] Client disconnected');
   }
 
   /**
@@ -99,6 +108,8 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   start(cb) {
+    console.log('[Info][social] Starting server');
+
     this.server.start();
 
     if (cb) {
@@ -112,6 +123,8 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   async stop(cb) {
+    console.log('[Info][social] Stopping server');
+
     try {
       await this.server.stop();
 
