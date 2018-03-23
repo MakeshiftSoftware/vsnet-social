@@ -14,7 +14,7 @@ const DEFAULT_CHANNEL = 'global';
 
 class VsSocket {
   /**
-   * Initialize socket server.
+   * Initialize socket server
    *
    * @param {Object} options - Server options
    */
@@ -80,7 +80,7 @@ class VsSocket {
   }
 
   /**
-   * Initialize store connection.
+   * Initialize store connection
    *
    * @param {Object} config - Store config
    */
@@ -97,7 +97,7 @@ class VsSocket {
   }
 
   /**
-   * Initialize pubsub connection.
+   * Initialize pubsub connection
    *
    * @param {Object} config - Pubsub config
    */
@@ -137,7 +137,7 @@ class VsSocket {
   }
 
   /**
-   * Start server.
+   * Start server
    * Start heartbeat interval
    */
   start() {
@@ -236,7 +236,7 @@ class VsSocket {
       server.handlers.connected(socket);
     }
 
-    console.log('Client %s connected', user.id); // eslint-disable-line
+    console.log('[Info][social] Client connected to socket server:', user.id);
   }
 
   /**
@@ -253,11 +253,11 @@ class VsSocket {
       server.handlers.disconnected(socket);
     }
 
-    console.log('Client %s disconnected', socket.id); // eslint-disable-line
+    console.log('[Info][social] Client disconnected from socket server:', socket.id);
   }
 
   /**
-   * Register callback function for an event.
+   * Register callback function for an event
    *
    * @param {String} event - Event name
    * @param {Function} callback - Callback function
@@ -277,6 +277,8 @@ class VsSocket {
       const socket = server.wss.clients[i];
 
       if (socket.isAlive === false) {
+        console.log('[Info][social] Cleaning up dead socket:', socket.id);
+
         delete server.users[socket.id];
         return socket.terminate();
       }
@@ -287,13 +289,14 @@ class VsSocket {
   }
 
   /**
-   * Message received handler.
+   * Message received handler
    *
    * @param {String} message - Message json
    * @param {Object} socket - Socket object
    */
   onMessageReceived(message, socket) {
-    console.log('Received message from client:', message);  // eslint-disable-line
+    console.log('[Info][social] Received socket data:', message);
+
     const m = this.parseMessage(message);
 
     if (m) {
@@ -318,8 +321,8 @@ class VsSocket {
         data: m.data,
         recipient: m.recipient
       };
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log('[Error][social] Unable to parse message:', err.message);
     }
   }
 
@@ -357,7 +360,8 @@ class VsSocket {
     const socket = this.users[id];
 
     if (socket) {
-      console.log('[Info][social] ');
+      console.log('[Info][social] Recipient socket found, sending message');
+
       this.sendMessage(data, socket);
     }
   }
@@ -373,6 +377,8 @@ class VsSocket {
       const socket = this.users[ids[i]];
 
       if (socket) {
+        console.log('[Info][social] Recipient socket found, sending message');
+
         this.sendMessage(data, socket);
       }
     }
