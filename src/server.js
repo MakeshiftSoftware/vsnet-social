@@ -38,13 +38,9 @@ if (cluster.isMaster) {
     process.on('SIGTERM', () => {
       server.stop(stop);
     });
-
-    console.log('[Info][social] Server started on port', server.port);
   });
 }
 
 function stop(err) {
-  console.log('[Info][social] Server stopped');
-
   process.exit(err ? 1 : 0);
 }

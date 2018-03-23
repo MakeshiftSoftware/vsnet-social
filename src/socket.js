@@ -1,4 +1,4 @@
-/* eslint-disable prefer-arrow-callback */
+/* eslint-disable prefer-arrow-callback, no-console */
 const WebSocket = require('uws');
 const url = require('url');
 const express = require('express');
@@ -19,6 +19,8 @@ class VsSocket {
    * @param {Object} options - Server options
    */
   constructor(options) {
+    console.log('[Info][social] Initializing socket server');
+
     const {
       port,
       secret,
@@ -50,6 +52,8 @@ class VsSocket {
    * Initialize app and routes
    */
   initApp() {
+    console.log('[Info][social] Initializing express app');
+
     const app = express();
 
     app.get('/healthz', function(req, res) {
@@ -63,6 +67,8 @@ class VsSocket {
    * Initialize http server and websocket server
    */
   initServer() {
+    console.log('[Info][social] Initializing express server');
+
     const server = http.createServer(this.app);
 
     this.wss = new WebSocket.Server({
@@ -79,6 +85,8 @@ class VsSocket {
    * @param {Object} config - Store config
    */
   initStore(config) {
+    console.log('[Info][social] Initializing redis store');
+
     const options = {};
 
     if (config.password) {
@@ -94,6 +102,8 @@ class VsSocket {
    * @param {Object} config - Pubsub config
    */
   initPubsub(config) {
+    console.log('[Info][social] Initializing redis pubsub');
+
     const options = {};
 
     if (config.password) {
@@ -110,9 +120,13 @@ class VsSocket {
     }
 
     this.sub.on('message', function(channel, message) {
+      console.log('[Info][social] Received pubsub message:', message);
+
       const m = this.parseMessage(message);
 
       if (m && m.data && m.recipient) {
+        console.log('[Info][social] Publishing message');
+
         if (Array.isArray(m.recipient)) {
           this.relayMulti(m.data, m.recipient);
         } else {
@@ -127,7 +141,11 @@ class VsSocket {
    * Start heartbeat interval
    */
   start() {
+    console.log('[Info][social] Starting socket server');
+
     this.server.listen(this.port, function() {
+      console.log('[Info][social] Socket server started on port', this.port);
+
       setInterval(this.ping.bind(this), this.pingInterval);
     });
   }
@@ -137,6 +155,8 @@ class VsSocket {
    * Close redis connections
    */
   stop() {
+    console.log('[Info][social] Stopping socket server');
+
     const actions = [];
 
     if (this.pub) {
@@ -299,7 +319,7 @@ class VsSocket {
         recipient: m.recipient
       };
     } catch (e) {
-      console.log(e); // eslint-disable-line
+      console.log(e);
     }
   }
 
@@ -337,6 +357,7 @@ class VsSocket {
     const socket = this.users[id];
 
     if (socket) {
+      console.log('[Info][social] ');
       this.sendMessage(data, socket);
     }
   }
@@ -364,6 +385,8 @@ class VsSocket {
    * @param {String} script - Lua script text
    */
   defineCommand(name, script) {
+    console.log('[Info][social] Defining custom redis command:', name);
+
     this.store.defineCommand(name, {
       lua: script,
       numberOfKeys: 0

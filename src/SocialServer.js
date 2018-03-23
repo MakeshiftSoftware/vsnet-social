@@ -69,7 +69,7 @@ class SocialServer {
    * @param {Object} socket - Socket connection of originating request
    */
   onPlayerOnline(m, socket) {
-    console.log('[Info][social] Sending online notification');
+    console.log('[Info][social] Sending player online notification');
 
     this.server.publishMessage(m, Channel.NOTIFICATION);
   }
@@ -128,10 +128,14 @@ class SocialServer {
     try {
       await this.server.stop();
 
+      console.log('[Info][social] Server stopped successfully');
+
       if (cb) {
         cb();
       }
     } catch (err) {
+      console.log('[Info][social] Error stopping server:', err.message);
+
       cb(err);
     }
   }
