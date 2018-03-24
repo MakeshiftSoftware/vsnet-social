@@ -11,7 +11,7 @@ if (cluster.isMaster) {
 
   cluster.on('exit', (worker) => {
     if (!worker.exitedAfterDisconnect) {
-      log.error('[social] Worker has died', worker.process.pid);
+      log.error('[social] Worker has died: ' + worker.process.pid);
 
       cluster.fork();
     }
