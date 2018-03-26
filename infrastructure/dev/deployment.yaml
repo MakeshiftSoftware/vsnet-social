@@ -38,8 +38,12 @@ spec:
           successThreshold: 1
           timeoutSeconds: 3
         env:
+          - name: NODE_ENV
+            value: "development"
           - name: PORT
             value: "3000"
+          - name: LOG_LEVEL
+            value: "debug"
           - name: REDIS_PUBSUB_SERVICE
             value: social-redis-pubsub:6379
           - name: APP_SECRET
