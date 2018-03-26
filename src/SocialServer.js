@@ -104,17 +104,21 @@ class SocialServer {
   }
 
   /**
-   * Stop server and cleanup
+   * Start server
    *
    * @param {Function} cb - callback function
    */
   start(cb) {
     log.info('[social] Starting server');
 
-    this.server.start();
+    try {
+      this.server.start(() => {
+        cb();
+      });
+    } catch (err) {
+      log.error('[social] Error starting server: ' + err.message);
 
-    if (cb) {
-      cb();
+      cb(err);
     }
   }
 
