@@ -1,33 +1,27 @@
 {
   "name": "vsnet-social",
-  "description": "vsnet social",
   "version": "1.0.0",
   "author": "taapesh",
   "private": true,
-  "repository": "https://gitlab.com/MakeshiftSoftware/vsnet-social",
+  "repository": "https://github.com/MakeshiftSoftware/vsnet-social",
   "engines": {
     "node": ">=8.0.0"
   },
   "scripts": {
-    "dev": "node ./src/server.js",
+    "dev": "nodemon --watch src ./src/server.js",
     "lint": "./node_modules/.bin/eslint src/**",
-    "clean": "rm -rf node_modules && yarn cache clean && yarn",
-    "nsp": "nsp check --output summary",
+    "clean": "rm -rf node_modules && rm -f yarn.lock && yarn cache clean && yarn",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^4.16.3",
-    "ioredis": "^3.2.2",
-    "jsonwebtoken": "^8.2.0",
-    "query-string": "^5.1.0",
-    "uws": "^9.14.0",
-    "winston": "^2.4.1"
+    "vsnet-logger": "MakeshiftSoftware/vsnet-logger#develop",
+    "vsnet-protocol": "MakeshiftSoftware/vsnet-protocol#develop",
+    "vsnet-socket": "MakeshiftSoftware/vsnet-socket#develop"
   },
   "devDependencies": {
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.1",
-    "nsp": "^3.2.1"
+    "eslint-plugin-node": "^5.1.1"
   }
 }

@@ -1,8 +1,15 @@
 /* eslint-disable no-process-exit */
 const os = require('os');
 const cluster = require('cluster');
+const logger = require('vsnet-logger');
 const SocialServer = require('./SocialServer');
-const log = require('./logger');
+
+const {
+  PORT,
+  APP_SECRET,
+  REDIS_PUBSUB_SERVICE,
+  REDIS_PUBSUB_PASSWORD
+} = process.env;
 
 if (cluster.isMaster) {
   for (let i = 0; i < os.cpus().length; ++i) {
@@ -11,24 +18,20 @@ if (cluster.isMaster) {
 
   cluster.on('exit', (worker) => {
     if (!worker.exitedAfterDisconnect) {
-      log.error('[social] Worker has died: ' + worker.process.pid);
+      logger.error('[social] Worker has died: ' + worker.process.pid);
 
       cluster.fork();
     }
   });
 } else {
-  const port = process.env.PORT;
-  const secret = process.env.APP_SECRET;
-  const pubsub = {
-    url: process.env.REDIS_PUBSUB_SERVICE,
-    password: process.env.REDIS_PUBSUB_PASSWORD
-  };
-
   // Initialize social server
   const server = new SocialServer({
-    port,
-    secret,
-    pubsub
+    port: PORT,
+    secret: APP_SECRET,
+    pubsub: {
+      url: REDIS_PUBSUB_SERVICE,
+      password: REDIS_PUBSUB_PASSWORD
+    }
   });
 
   server.start(() => {

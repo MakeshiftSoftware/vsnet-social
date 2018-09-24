@@ -1,12 +1,7 @@
 /* eslint-disable prefer-arrow-callback, no-console */
-const VsSocket = require('./socket');
-const log = require('./logger');
-
-const Protocol = {
-  CONNECTED: 0,
-  MESSAGE: 1,
-  PLAYER_ONLINE: 2
-};
+const VsSocket = require('vsnet-socket');
+const Protocol = require('vsnet-protocol');
+const logger = require('vsnet-logger');
 
 const Channel = {
   CHAT: 'chat',
@@ -20,7 +15,7 @@ class SocialServer {
    * @param {Object} options - Server options
    */
   constructor(options) {
-    log.info('[social] Initializing server');
+    logger.info('[social] Initializing server');
 
     const {
       port,
@@ -29,7 +24,7 @@ class SocialServer {
     } = options;
 
     if (!secret) {
-      log.warn('[social] No secret provided, connecting clients will not be verified');
+      logger.warn('[social] No secret provided, connecting clients will not be verified');
     }
 
     this.server = new VsSocket({
@@ -47,32 +42,8 @@ class SocialServer {
     // attach handlers
     this.server.onConnect(this.onClientConnected);
     this.server.onDisconnect(this.onClientDisconnected);
-    this.server.on(Protocol.MESSAGE, this.onMessageReceived);
-    this.server.on(Protocol.PLAYER_ONLINE, this.onPlayerOnline);
-  }
-
-  /**
-   * Message received handler
-   *
-   * @param {Object} m - Message object
-   * @param {Object} socket - Socket connection of originating request
-   */
-  onMessageReceived(m, socket) {
-    log.info('[social] Received chat message from client: ' + m.data);
-
-    this.server.publishMessage(m, Channel.CHAT);
-  }
-
-  /**
-   * Notify player's friends that player is online
-   *
-   * @param {Object} m - Message object
-   * @param {Object} socket - Socket connection of originating request
-   */
-  onPlayerOnline(m, socket) {
-    log.info('[social] Sending player online notification');
-
-    this.server.publishMessage(m, Channel.NOTIFICATION);
+    this.server.on(Protocol.SOCIAL_SERVER_CHAT_MESSAGE, this.onMessageReceived);
+    this.server.on(Protocol.SOCIAL_SERVER_PLAYER_ONLINE, this.onPlayerOnline);
   }
 
   /**
@@ -82,11 +53,11 @@ class SocialServer {
    * @param {Object} socket - New socket connection
    */
   onClientConnected(socket) {
-    log.info('[social] Client connected: ' + socket.id);
+    logger.info('[social] Client connected: ' + socket.id);
 
     const message = {
       data: {
-        type: Protocol.CONNECTED
+        type: Protocol.SOCIAL_SERVER_PLAYER_CONNECTED
       }
     };
 
@@ -100,7 +71,37 @@ class SocialServer {
    * @param {Object} socket - Disconnected socket
    */
   onClientDisconnected(socket) {
-    log.info('[social] Client disconnected: ' + socket.id);
+    logger.info('[social] Client disconnected: ' + socket.id);
+
+    const message = {
+      data: {
+        type: Protocol.SOCIAL_SERVER_PLAYER_DISCONNECTED
+      }
+    };
+  }
+
+  /**
+   * Message received handler
+   *
+   * @param {Object} m - Message object
+   * @param {Object} socket - Socket connection of originating request
+   */
+  onMessageReceived(m, socket) {
+    logger.info('[social] Received chat message from client: ' + m.data);
+
+    this.server.publishMessage(m, Channel.CHAT);
+  }
+
+  /**
+   * Notify user or users that player is online
+   *
+   * @param {Object} m - Message object
+   * @param {Object} socket - Socket connection of originating request
+   */
+  onPlayerOnline(m, socket) {
+    logger.info('[social] Sending player online notification');
+
+    this.server.publishMessage(m, Channel.NOTIFICATION);
   }
 
   /**
@@ -109,14 +110,14 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   start(cb) {
-    log.info('[social] Starting server');
+    logger.info('[social] Starting server');
 
     try {
       this.server.start(() => {
         cb();
       });
     } catch (err) {
-      log.error('[social] Error starting server: ' + err.message);
+      logger.error('[social] Error starting server: ' + err.message);
 
       cb(err);
     }
@@ -128,18 +129,18 @@ class SocialServer {
    * @param {Function} cb - callback function
    */
   async stop(cb) {
-    log.info('[social] Stopping server');
+    logger.info('[social] Stopping server');
 
     try {
       await this.server.stop();
 
-      log.info('[social] Server stopped successfully');
+      logger.info('[social] Server stopped successfully');
 
       if (cb) {
         cb();
       }
     } catch (err) {
-      log.error('[social] Error stopping server: ' + err.message);
+      logger.error('[social] Error stopping server: ' + err.message);
 
       cb(err);
     }

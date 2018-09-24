@@ -1,11 +1,13 @@
-FROM node:8
+FROM node:alpine
+
+RUN yarn global add nodemon
 
 EXPOSE 3000
 
 WORKDIR /app
 
 # Bundle app
-COPY src ./src
+COPY src src/
 COPY package.json .
 COPY yarn.lock .
 
