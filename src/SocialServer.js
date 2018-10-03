@@ -14,14 +14,12 @@ class SocialServer {
    *
    * @param {Object} options - Server options
    */
-  constructor(options) {
+  constructor({
+    port,
+    secret,
+    pubsub
+  }) {
     logger.info('[social] Initializing server');
-
-    const {
-      port,
-      secret,
-      pubsub
-    } = options;
 
     if (!secret) {
       logger.warn('[social] No secret provided, connecting clients will not be verified');
