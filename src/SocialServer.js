@@ -30,20 +30,20 @@ class SocialServer {
     this.server = new VsSocket({
       port,
       secret,
+      onConnect: this.onClientConnected.bind(this),
+      onDisconnect: this.onClientDisconnected.bind(this),
       pubsub: {
         ...pubsub,
         channels: [
           Channel.CHAT,
           Channel.NOTIFICATION
         ]
+      },
+      events: {
+        [Protocol.SOCIAL_SERVER_CHAT_MESSAGE]: this.onMessageReceived.bind(this),
+        [Protocol.SOCIAL_SERVER_PLAYER_ONLINE]: this.onPlayerOnline.bind(this)
       }
     });
-
-    // attach handlers
-    this.server.onConnect(this.onClientConnected);
-    this.server.onDisconnect(this.onClientDisconnected);
-    this.server.on(Protocol.SOCIAL_SERVER_CHAT_MESSAGE, this.onMessageReceived);
-    this.server.on(Protocol.SOCIAL_SERVER_PLAYER_ONLINE, this.onPlayerOnline);
   }
 
   /**

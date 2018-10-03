@@ -1652,17 +1652,17 @@ vary@~1.1.2:
 
 vsnet-logger@MakeshiftSoftware/vsnet-logger#develop:
   version "1.0.0"
-  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-logger/tar.gz/a8e8498c55ecdb4970fefb93148e17239467367e"
+  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-logger/tar.gz/8387447b0e202f887289ba47ca8dad0e6d9d406a"
   dependencies:
     winston "^3.1.0"
 
 vsnet-protocol@MakeshiftSoftware/vsnet-protocol#develop:
   version "1.0.0"
-  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-protocol/tar.gz/af4c8988c54b7d6c77bbdf8318c61b51f38c799f"
+  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-protocol/tar.gz/3e7f95d6bd8a4710cfbd836c22203ad01258f1a1"
 
 vsnet-socket@MakeshiftSoftware/vsnet-socket#develop:
   version "1.0.0"
-  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-socket/tar.gz/714d684ff8842c70aade3210530eb9e6ea122ba9"
+  resolved "https://codeload.github.com/MakeshiftSoftware/vsnet-socket/tar.gz/98b4f33b35025cbd53682f03de5a9cd0ec2d00a5"
   dependencies:
     bufferutil "^4.0.0"
     express "^4.16.3"
